@@ -55,8 +55,22 @@ public class UserController {
         return ResponseEntity.noContent().build(); // equivale a um OK sem conteudo na mensagem
     }
 
+    @GetMapping("/id/{codigo}") // qnd a requisição for de GET esse método será selecionado
+    public ResponseEntity<User> findtUser(@PathVariable long codigo) { // o PathVariable é o que eu coloco no caminho da URL
+        
+        User userFound = repo.findById(codigo).orElse(null); // procure pela chave primaria id e se não achar retorna nulo
+
+        // verifica se o usuario foi encontrado
+        if(userFound != null) {
+            return ResponseEntity.ok(userFound);
+        }
+
+        return ResponseEntity.notFound().build(); // não achou o usuario error 404
+    }
+
     @GetMapping
     public ResponseEntity<ArrayList<User>> selectAll() {
+        
         ArrayList<User> listUsers = (ArrayList<User>) repo.findAll(); // convertendo as instancias do BD em uma array List
 
         return ResponseEntity.ok(listUsers);
