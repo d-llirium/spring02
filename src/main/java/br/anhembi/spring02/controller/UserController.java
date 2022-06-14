@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +25,21 @@ public class UserController {
 
     @PostMapping // qnd a requisição for de POST esse método será selecionado
     public ResponseEntity<User> insertUser(@RequestBody User user) { // RequestBody indica que há uma informação no corpo da requisição -- json no nosso caso
+        
+        if(user.getCode() > 0) { // não pode ser passado um código para salvar
+            return ResponseEntity.badRequest().build();
+        }
+        User newUser = repo.save(user);
+
+        return ResponseEntity.ok(newUser);
+    }
+
+    @PutMapping // qnd a requisição for de PUT esse método será selecionado
+    public ResponseEntity<User> updatetUser(@RequestBody User user) { // RequestBody indica que há uma informação no corpo da requisição -- json no nosso caso
+        
+        if(user.getCode() <= 0) { // é preciso ter código para atualizar
+            return ResponseEntity.badRequest().build();
+        }
         User newUser = repo.save(user);
 
         return ResponseEntity.ok(newUser);
