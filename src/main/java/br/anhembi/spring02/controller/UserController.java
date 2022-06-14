@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,6 +45,14 @@ public class UserController {
         User newUser = repo.save(user);
 
         return ResponseEntity.ok(newUser);
+    }
+
+    @DeleteMapping("/{codigo}") // qnd a requisição for de DELETE esse método será selecionado
+    public ResponseEntity<User> deletetUser(@PathVariable long codigo) { // o PathVariable é o que eu coloco no caminho da URL
+        
+        repo.deleteById(codigo); // apague pekla chave primaria
+
+        return ResponseEntity.noContent().build(); // equivale a um OK sem conteudo na mensagem
     }
 
     @GetMapping
