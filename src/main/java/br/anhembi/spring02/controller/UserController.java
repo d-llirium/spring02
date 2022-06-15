@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,7 @@ public class UserController {
     @Autowired // cria a classe que implementa a interface IUserRepo [com os métodos SQL] e retorna um objeto repo do da interface 
     private IUserRepo repo;
 
+    @PreAuthorize("hasRole('ADMIN')") // somente o ADMIN pode fazer post
     @PostMapping // qnd a requisição for de POST esse método será selecionado
     public ResponseEntity<User> insertUser(@RequestBody User user) { // RequestBody indica que há uma informação no corpo da requisição -- json no nosso caso
         

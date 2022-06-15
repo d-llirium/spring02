@@ -2,6 +2,7 @@ package br.anhembi.spring02.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import br.anhembi.spring02.services.UserSysService;
 
 @EnableWebSecurity // habilita essa classe configurar a segurança da aplicação
+@EnableGlobalMethodSecurity(prePostEnabled = true) // para poder utilizar pre authorização 
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // WebSecurityConfigurerAdapter possui métodos de config de segurança
 
