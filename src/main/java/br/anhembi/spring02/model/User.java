@@ -1,11 +1,16 @@
 package br.anhembi.spring02.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity // indica que esta classe será armazenada no BD
 @Table(name = "usuarios") // sem acento e tudo minúscula
@@ -26,6 +31,10 @@ public class User { // TABELA
 
     @Column(name = "senha", length = 30, nullable = false) // coluna com nome se senha de no máximo 30 caracteres e não pode ser nula == @NOTNULL
     private String password;
+
+    @OneToMany(mappedBy = "owner") // 1 usuário que possui muitos carros
+    @JsonIgnoreProperties("owner") // ao buscar os dados dos veículos do usuário, não traga novamente os dados do proprietário de cada veículo
+    private List<Car> cars;
 
     // METHODS
     public long getCode() {
@@ -58,6 +67,14 @@ public class User { // TABELA
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Car> getCars() {
+        return cars;
+    }
+
+    public void setCars(List<Car> cars) {
+        this.cars = cars;
     }
     
 }

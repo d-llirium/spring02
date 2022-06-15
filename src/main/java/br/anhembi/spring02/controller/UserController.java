@@ -3,6 +3,7 @@ package br.anhembi.spring02.controller;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.anhembi.spring02.dto.UserDto;
 import br.anhembi.spring02.model.User;
 import br.anhembi.spring02.repository.IUserRepo;
 
@@ -44,7 +46,8 @@ public class UserController {
         }
         User newUser = repo.save(user);
 
-        return ResponseEntity.ok(newUser);
+        // return ResponseEntity.ok(newUser); // opção para retornar ok = 200
+        return ResponseEntity.status(HttpStatus.OK).body(newUser);
     }
 
     @DeleteMapping("/{codigo}") // qnd a requisição for de DELETE esse método será selecionado
@@ -56,13 +59,15 @@ public class UserController {
     }
 
     @GetMapping("/id/{codigo}") // qnd a requisição for de GET esse método será selecionado
-    public ResponseEntity<User> findtUser(@PathVariable long codigo) { // o PathVariable é o que eu coloco no caminho da URL
+    public ResponseEntity<UserDto> findtUser(@PathVariable long codigo) { // o PathVariable é o que eu coloco no caminho da URL
         
         User userFound = repo.findById(codigo).orElse(null); // procure pela chave primaria id e se não achar retorna nulo
 
         // verifica se o usuario foi encontrado
         if(userFound != null) {
-            return ResponseEntity.ok(userFound);
+            UserDto userDto = new UserDto(userFound); // retorna apenas os dados que o cliente pode acessar, sem o password
+
+            return ResponseEntity.ok(userDto);
         }
 
         return ResponseEntity.notFound().build(); // não achou o usuario error 404
@@ -70,7 +75,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<ArrayList<User>> selectAll() {
-        
+
         ArrayList<User> listUsers = (ArrayList<User>) repo.findAll(); // convertendo as instancias do BD em uma array List
 
         return ResponseEntity.ok(listUsers);
