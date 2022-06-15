@@ -1,5 +1,6 @@
 package br.anhembi.spring02.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -7,9 +8,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import br.anhembi.spring02.services.UserSysService;
+
 @EnableWebSecurity // habilita essa classe configurar a segurança da aplicação
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // WebSecurityConfigurerAdapter possui métodos de config de segurança
+
+    @Autowired
+    private UserSysService service;
     
     // configura quais requisições http quero proteger
     @Override
@@ -27,9 +33,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder(); // objeto que ira criptografar as senhas
 
-        auth.inMemoryAuthentication()
-            .withUser("patricia")
-            .password(passwordEncoder.encode("aula"))
-            .roles("ASMIN", "USER");
+        // para captar a senha codificada que irá no BD
+        System.out.println("=========="+ passwordEncoder.encode("aula"));
+
+        // auth.inMemoryAuthentication()
+        //     .withUser("patricia")
+        //     .password(passwordEncoder.encode("aula"))
+        //     .roles("ASMIN", "USER");
+
+        auth.userDetailsService(service)
+            .passwordEncoder(passwordEncoder);
     }
 }
